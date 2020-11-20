@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gloryh.repository.UserRepository">
+    <select id="findAll" resultType="com.gloryh.entity.User">
+        SELECT * FROM t_user limit #{param1},#{param2}
+    </select>
+    <select id="count" resultType="int">
+        SELECT COUNT(*) FROM t_user
+    </select>
+    <select id="findById" resultType="com.gloryh.entity.User">
+        SELECT * FROM t_user WHERE id = #{id}
+    </select>
+    <insert id="save" parameterType="com.gloryh.entity.User">
+        INSERT INTO t_user(username,password,nickname,gender,telephone,registerdate,address) VALUES (#{username},#{password},#{nickname},#{gender},#{telephone},#{registerdate},#{address})
+    </insert>
+    <update id="update" parameterType="com.gloryh.entity.User">
+        UPDATE t_menu SET username = #{username},password=#{password},nickname=#{nickname},gender=#{gender},telephone=#{telephone},registerdate=#{registerdate},address=#{address} WHERE id = #{id}
+    </update>
+    <delete id="deleteById" parameterType="long">
+        DELETE FROM t_user WHERE id =#{id}
+    </delete>
+
+</mapper>

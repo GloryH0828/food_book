@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gloryh.repository.OrderRepository">
+    <resultMap id="orderMap" type="com.gloryh.entity.Order">
+        <id column="id" property="id"></id>
+        <result column="date" property="date"></result>
+        <result column="state" property="state"></result>
+        <collection property="user" ofType="com.gloryh.entity.User">
+            <id column="uid" property="id"></id>
+            <result column="uusername" property="username"></result>
+            <result column="unickname" property="nickname"></result>
+            <result column="telephone" property="telephone"></result>
+            <result column="address" property="address"></result>
+        </collection>
+        <collection property="admin" ofType="com.gloryh.entity.Admin">
+            <id column="aid" property="id"></id>
+            <result column="ausername" property="username"></result>
+        </collection>
+        <collection property="menu" ofType="com.gloryh.entity.Menu">
+            <id column="mid" property="id"></id>
+            <result property="name" column="mname"></result>
+            <result property="price" column="mprice"></result>
+            <result property="flavor" column="mflavor"></result>
+        </collection>
+    </resultMap>
+    <select id="findAll" resultMap="orderMap">
+        SELECT o.*,u.nickname AS unickname ,u.username AS uusername ,a.username AS ausername,m.name AS mname FROM t_order AS o,t_menu AS m,t_user AS u,t_admin AS a WHERE o.aid =a.id AND o.mid =m.id AND o.uid =u.id  LIMIT #{param1},#{param2}
+    </select>
+    <select id="count" resultType="int">
+        SELECT COUNT(*) FROM t_order
+    </select>
+    <select id="findById" resultMap="orderMap">
+        SELECT o.*,u.nickname AS unickname ,u.username AS uusername ,a.username AS ausername,m.name AS mname,m.price AS mprice,m.flavor AS mflavor FROM t_order AS o,t_menu AS m,t_user AS u,t_admin AS a WHERE  o.mid =m.id AND o.uid =u.id AND o.id =#{id}
+    </select>
+    <insert id="save" parameterType="com.gloryh.entity.Order">
+        INSERT INTO t_order(uid,mid,date,state) VALUES (#{user.id},#{menu.id},#{date},0)
+    </insert>
+    <update id="update" parameterType="com.gloryh.entity.Order">
+        UPDATE t_order SET aid =#{admin.id},state=1 WHERE id = #{id}
+    </update>
+    <select id="findAllByUid" resultMap="orderMap">
+        SELECT o.*,u.nickname AS unickname ,u.username AS uusername ,a.username AS ausername,m.name AS mname,m.price AS mprice,m.flavor AS mflavor FROM t_order AS o,t_menu AS m,t_user AS u,t_admin AS a WHERE  o.mid =m.id AND o.uid =u.id AND o.uid = #{uid}   LIMIT #{index},#{limit}
+    </select>
+    <select id="countByUid" resultType="int">
+        SELECT COUNT(*) FROM t_order WHERE uid =#{uid}
+    </select>
+    <select id="findAllByState" resultMap="orderMap">
+        SELECT o.*,u.nickname AS unickname ,u.username AS uusername ,u.telephone ,u.address,a.username AS ausername,m.name AS mname,m.price AS mprice,m.flavor AS mflavor FROM t_order AS o,t_menu AS m,t_user AS u,t_admin AS a WHERE  o.mid =m.id AND o.uid =u.id AND o.state =#{state}  LIMIT #{index},#{limit}
+    </select>
+    <select id="countByState" resultType="int">
+        SELECT COUNT(*) FROM t_order WHERE state =#{state}
+    </select>
+</mapper>
